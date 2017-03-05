@@ -1,0 +1,43 @@
+class MyDict:
+    def __init__(self, number=100):
+        self.__number = number
+        self.__lst = []
+        for _ in range(self.__number):
+            self.__lst.append([])
+
+    def push(self, key, value):
+        idx = hash(key) % self.__number
+        for i, (k, v) in enumerate(self.__lst[idx]):
+            if k == key:
+                self.__lst[idx][i] = [k,value]
+                break
+        else:
+            self.__lst[idx].append([key, value])
+
+    def keys(self):
+        s=set
+        for items in self.__lst:
+            for k,v in items:
+                s.add(k)
+
+    def values(self):
+        lst=[]
+        for items in self.__lst:
+            for k,v in items:
+                lst.append(v)
+
+    def __getitem__(self, item): # 可以实现下标访问
+        idx=hash(item)%self.__number
+        for k,v in self.__lst[idx]:
+            if k == item:
+                return v
+        raise ValueError('No such item')
+
+    def get(self,key):
+        idx=hash(key)%self.__number
+        for k,v in self.__lst[idx]:
+            if key==k:
+                return v
+
+    def __str__(self):
+        return '{}'.format(self.__lst)
