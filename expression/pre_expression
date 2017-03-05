@@ -1,0 +1,56 @@
+不考虑括号的情况下
+这种比较简单
+
+exp = '2 * 3 + 5 - 16 / 4 ** 3 + 2'
+priority = { '**': 3, '*': 2, '/': 2,'+': 1, '-': 1}
+num_stack = []
+sy_stack = []
+expr = exp.split()
+
+for x in expr[::-1]:
+    if x.isdigit():
+        num_stack.insert(0, x)  # 如果是数字直接存进去
+    else:  # 不是数字
+        if len(sy_stack) == 0 or priority[sy_stack[0]] <= priority[x]:  # 优先级高的话 
+            sy_stack.insert(0, x)
+        else:                                                                         # 优先级小于栈顶的优先级
+            while sy_stack and priority[sy_stack[0]] > priority[x]:
+                tmp_sy2 = sy_stack.pop(0)
+                num_stack.insert(0, tmp_sy2)
+            else:
+                sy_stack.insert(0, x)
+else:
+    while sy_stack:
+        num_stack.insert(0, sy_stack.pop(0))
+print(num_stack)
+
+考虑括号的情况
+
+exp = '2 * 3 + 5  - 16 / 4 ** ( 3 + 2 )'
+
+priority = { '**': 3,  '*': 2,  '/': 2, '+': 1,   '-': 1 }
+num_stack = []
+sy_stack = []
+expr = exp.split()
+print(expr)
+for x in expr[::-1]:
+    if x.isdigit(): # 是数字
+        num_stack.insert(0, x)  # 如果是数字直接存进去
+    else:                # 不是数字
+        if x == '(':     # 当遇到左括号的时候 依次弹出运算符直到 遇到)
+            tmp_sy = sy_stack[0]
+            while tmp_sy != ')':
+                num_stack.insert(0, tmp_sy)
+                sy_stack.pop(0)
+                tmp_sy = sy_stack.pop(0)
+        elif len(sy_stack) == 0 or x == ')' or sy_stack[0] == ')' or priority[sy_stack[0]] <= priority[x]:
+            sy_stack.insert(0, x)
+        else:                               # 优先级小于栈顶的优先级
+            while sy_stack and priority[sy_stack[0]] > priority[x]:
+                tmp_sy2 = sy_stack.pop(0)
+                num_stack.insert(0, tmp_sy2)
+            else:
+                sy_stack.insert(0, x)
+else:
+    while sy_stack:
+        num_stack.insert(0, sy_stack.pop(0))
